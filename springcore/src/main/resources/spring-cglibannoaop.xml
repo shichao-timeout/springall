@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <context:component-scan base-package="com.timeout.springcore.aop"></context:component-scan>
+
+    <bean id="desk" class="com.timeout.springcore.aop.cglib.Desk"></bean>
+    <bean id="table" class="com.timeout.springcore.aop.cglib.Table"></bean>
+    <bean id="cglibXmlAspect" class="com.timeout.springcore.aop.cglib.CglibXmlAspect"></bean>
+
+
+    <!--
+    |第一个 * —— 通配 随便率性返回值类型|
+    |第二个 * —— 通配包com.timeout.springcore.aop.springjdk下的随便率性class|
+    |第三个 * —— 通配包com.timeout.springcore.aop.springjdk下的随便率性class的随便率性办法|
+    |第四个 .. —— 通配 办法可以有0个或多个参数|
+    -->
+        <aop:config>
+            <aop:aspect id="datelog" ref="cglibXmlAspect">
+                <aop:pointcut id="location" expression="execution(* com.timeout.springcore.aop.cglib.*.location(..))" />
+                <aop:before method="start" pointcut-ref="location"/>
+                <aop:after method="end" pointcut-ref="location"/>
+            </aop:aspect>
+        </aop:config>
+        <!-- 强制使用cglib，必须指定-->
+        <aop:aspectj-autoproxy proxy-target-class="true"></aop:aspectj-autoproxy>
+
+</beans>
